@@ -1,9 +1,9 @@
 import ReactStars from "react-stars";
 
-const Product = () => {
+const Product = ({img}) => {
   return (
     <div className="flex flex-col items-center justify-center h-[550px] m-[10px] cursor-pointer">
-            <img src="/serum1.jpg" alt="" className="h-[400px] w-[300px] bg-cover" />
+            <img src={img} alt="" className="h-[400px] w-[300px] bg-cover" />
             <h2 className="font-semibold text-[18px] w-[300px]">
               Rosehip Seed, Argan, Sweet Almond & Vitamin E Oil-Anti-aging
             </h2>
