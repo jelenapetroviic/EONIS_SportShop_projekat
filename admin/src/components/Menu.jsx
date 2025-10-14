@@ -11,6 +11,7 @@ import {
   FaUser,
   FaUsers,
 } from "react-icons/fa";
+import {Link} from "react-router-dom";
 
 const Menu = () => {
   return (
@@ -28,27 +29,36 @@ const Menu = () => {
 
         <hr className="w-full my-[20px] border-gray-300" />
 
-        <li className="flex items-center text-[20px] cursor-pointer mt-[20px] transition-colors duration-100">
-          <FaUsers className="mr-[15px] text-[#ef93db]" />
-          Users
-        </li>
+        <Link to="/users">
+          <li className="flex items-center text-[20px] cursor-pointer mt-[20px] transition-colors duration-100">
+            <FaUsers className="mr-[15px] text-[#ef93db]" />
+            Users
+          </li>
+        </Link>
 
-        <li className="flex items-center text-[20px] cursor-pointer mt-[20px] transition-colors duration-100">
+        <Link to="/products">
+          <li className="flex items-center text-[20px] cursor-pointer mt-[20px] transition-colors duration-100">
           <FaBox className="mr-[15px] text-[#ef93db]" />
           Products
-        </li>
+          </li>
+        </Link>
 
-        <li className="flex items-center text-[20px] cursor-pointer mt-[20px] transition-colors duration-100">
-          <FaClipboardList className="mr-[15px] text-[#ef93db]" />
-          Orders
-        </li>
+        <Link to="/orders">
+          <li className="flex items-center text-[20px] cursor-pointer mt-[20px] transition-colors duration-100">
+            <FaClipboardList className="mr-[15px] text-[#ef93db]" />
+            Orders
+          </li>
+        </Link>
 
         <hr className="w-full my-[20px] border-gray-300" />
 
-        <li className="flex items-center text-[20px] cursor-pointer mt-[20px] transition-colors duration-100">
-          <FaElementor className="mr-[15px] text-[#ef93db]" />
-          Banners
-        </li>
+        <Link to="/banners">
+          <li className="flex items-center text-[20px] cursor-pointer mt-[20px] transition-colors duration-100">
+            <FaElementor className="mr-[15px] text-[#ef93db]" />
+            Banners
+          </li>
+        </Link>
+
         <li className="flex items-center text-[20px] cursor-pointer mt-[20px] transition-colors duration-100">
           <FaCog className="mr-[15px] text-[#ef93db]" />
           Settings
