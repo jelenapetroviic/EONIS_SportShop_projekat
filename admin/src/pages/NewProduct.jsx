@@ -58,7 +58,7 @@ const NewProduct = () => {
       const {url} = uploadRes.data;
       setImage(url)
       setUploading("Uploaded 100%")
-      await userRequest.post("/products", {img: image, ...inputs, ...selectedOptions})
+      await userRequest.post("/products", {img: url, ...inputs, ...selectedOptions})
     } catch (error) {
       console.log(error);
       setUploading("Uploading failed")

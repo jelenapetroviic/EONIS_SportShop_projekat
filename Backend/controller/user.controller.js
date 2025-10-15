@@ -37,7 +37,7 @@ const deleteUser = asyncHandler(async (req, res) => {
 
 // GET ONE USER
 const getUser = asyncHandler(async (req, res) => {
-  const user = await User.findBu(req.params.id);
+  const user = await User.findById(req.params.id);
   if (!user) {
     res.status(400);
     throw new Error("User was not found");
@@ -49,7 +49,7 @@ const getUser = asyncHandler(async (req, res) => {
 // GET ALL USERS
 const getAllUsers = asyncHandler(async (req, res) => {
   const users = await User.find();
-  if (!user) {
+  if (!users) {
     res.status(400);
     throw new Error("Users were not fetched");
   } else {
