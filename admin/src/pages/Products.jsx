@@ -2,83 +2,28 @@ import { width } from "@mui/system";
 import { DataGrid } from "@mui/x-data-grid";
 import { FaTrash } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import {userRequest} from "../requestMethods";
 
 const Products = () => {
 
-  const data = [
-    {
-      _id: "101",
-      title: "Moisturizing Cream",
-      img: "https://image.pexels.com/photos/8054395/pexels-photo-8054395.jpeg",
-      desc: "Hydrating cream for dry skin.",
-      originalPrice: 25.99,
-      descountPrice: 19.99,
-      inStock: true,
-    },
-    {
-      _id: "102",
-      title: "Moisturizing Cream",
-      img: "https://image.pexels.com/photos/8054395/pexels-photo-8054395.jpeg",
-      desc: "Hydrating cream for dry skin.",
-      originalPrice: 25.99,
-      descountPrice: 19.99,
-      inStock: true,
-    },
-    {
-      _id: "103",
-      title: "Moisturizing Cream",
-      img: "https://image.pexels.com/photos/8054395/pexels-photo-8054395.jpeg",
-      desc: "Hydrating cream for dry skin.",
-      originalPrice: 25.99,
-      descountPrice: 19.99,
-      inStock: true,
-    },
-    {
-      _id: "104",
-      title: "Moisturizing Cream",
-      img: "https://image.pexels.com/photos/8054395/pexels-photo-8054395.jpeg",
-      desc: "Hydrating cream for dry skin.",
-      originalPrice: 25.99,
-      descountPrice: 19.99,
-      inStock: true,
-    },
-    {
-      _id: "105",
-      title: "Moisturizing Cream",
-      img: "https://image.pexels.com/photos/8054395/pexels-photo-8054395.jpeg",
-      desc: "Hydrating cream for dry skin.",
-      originalPrice: 25.99,
-      descountPrice: 19.99,
-      inStock: true,
-    },
-    {
-      _id: "106",
-      title: "Moisturizing Cream",
-      img: "https://image.pexels.com/photos/8054395/pexels-photo-8054395.jpeg",
-      desc: "Hydrating cream for dry skin.",
-      originalPrice: 25.99,
-      descountPrice: 19.99,
-      inStock: true,
-    },
-    {
-      _id: "107",
-      title: "Moisturizing Cream",
-      img: "https://image.pexels.com/photos/8054395/pexels-photo-8054395.jpeg",
-      desc: "Hydrating cream for dry skin.",
-      originalPrice: 25.99,
-      descountPrice: 19.99,
-      inStock: true,
-    },
-    {
-      _id: "108",
-      title: "Moisturizing Cream",
-      img: "https://image.pexels.com/photos/8054395/pexels-photo-8054395.jpeg",
-      desc: "Hydrating cream for dry skin.",
-      originalPrice: 25.99,
-      descountPrice: 19.99,
-      inStock: true,
+  const [products, setProducts] = useState([]);
+
+  useEffect(() =>{
+
+    const getProducts = async() =>{
+
+      try {
+        const res = await userRequest.get("/products");
+        setProducts(res.data);
+        
+      } catch (error) {
+        console.log(error)
+      }
     }
-  ];
+    getProducts();
+
+  },[])
 
   const columns = [
     { field: "_id", headerName: "ID", width: 90 },
@@ -91,7 +36,7 @@ const Products = () => {
           <div className="flex items-center">
             <img 
               className="h-12 w-12 rounded-full object-cover mr-2"
-              src="{params.row.img}"
+              src={params.row.img}
               alt=""
               height="100px"
               width="100px"
@@ -112,7 +57,7 @@ const Products = () => {
       renderCell: (params) =>{
         return(
           <>
-            <Link to={`/product/${params.id}`}>
+            <Link to={`/product/${params.row._id}`}>
               <button className="bg-gray-400 text-white cursor-pointer w-[70px]">
                 Edit
               </button>
@@ -144,7 +89,7 @@ const Products = () => {
             </button>
           </div>
           <div className="m-[30px]">
-            <DataGrid getRowId={(row) => row._id} rows={data} checkboxSelection columns={columns} />
+            <DataGrid getRowId={(row) => row._id} rows={products} checkboxSelection columns={columns} />
           </div>
         </div>
   )
