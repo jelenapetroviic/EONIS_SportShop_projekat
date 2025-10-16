@@ -56,7 +56,7 @@ const getProduct = asyncHandler(async (req, res) => {
   }
 });
 
-// GET ALL PRODUCT
+// GET ALL PRODUCTS
 const getALLproducts = asyncHandler(async (req, res) => {
   const qNew = req.query.new;
   const qCategory = req.query.category;
@@ -73,13 +73,14 @@ const getALLproducts = asyncHandler(async (req, res) => {
       $text: {
         $search: qsearch,
         $caseSensitive: false,
-        $dicriticSensitive: false,
+        $diacriticSensitive: false,
       },
     });
   } else {
     products = await Product.find().sort({ createdAt: -1 });
-    res.status(200).json(products);
+   
   }
+  res.status(200).json(products)
 });
 
 // RATING PRODUCT
@@ -87,9 +88,14 @@ const getALLproducts = asyncHandler(async (req, res) => {
 const ratingProduct = asyncHandler(async (req, res) => {
   const { star, name, comment, postedBy } = req.body;
 
-  if (star && name && coment && postedBy) {
-    const postedBy = await Product.findByIdAndUpdate(
+  console.log(star, name, comment, postedBy)
+  console.log(req.params.id)
+
+
+  if (star) {
+    await Product.findByIdAndUpdate(
       req.params.id,
+
       {
         $push: { ratings: { star, name, comment, postedBy } },
       },
@@ -97,11 +103,11 @@ const ratingProduct = asyncHandler(async (req, res) => {
         new: true,
       }
     );
-    res.status(200).json("product was rated successfully");
+    res.status(201).json("product was rated successfully");
   } else {
-    res.$status(400);
+    res.status(400);
     throw new Error("product was not rated successfully");
   }
 });
 
-export {ratingProduct, getALLproducts, getProduct, createProduct, updateProduct, deleteProduct}
+export {ratingProduct, getALLproducts,getProduct, createProduct,updateProduct, deleteProduct}
