@@ -27,42 +27,45 @@ function App() {
     {
       path: "/",
       element: <Layout />,
-      children:[
+      children: [
         {
-          path:"/",
-          element: <Home />
+          path: "/",
+          element: <Home />,
         },
         {
-          path:"/cart",
-          element: <Cart />
+          path: "/cart",
+          element: <Cart />,
         },
         {
-          path:"/login",
-          element: <Login />
+          path: "/login",
+          element: <Login />,
         },
         {
-          path:"/create-account",
-          element: <Register />
+          path: "/create-account",
+          element: <Register />,
         },
         {
-          path:"/myaccount",
-          element: <Myaccount />
+          path: "/myaccount",
+          element: <Myaccount />,
         },
         {
-          path:"/product/:productId",
-          element: <Product />
+          path: "/product/:productId",
+          element: <Product />,
         },
         {
-          path:"/products/:searchterm",
-          element: <ProductList />
+          path: "/products",
+          element: <ProductList />,
         },
         {
-          path:"/orders",
-          element: <Order />
-        }
-      ]
+          path: "/products/:searchterm",
+          element: <ProductList />,
+        },
+        {
+          path: "/orders",
+          element: <Order />,
+        },
+      ],
     },
-    
   ]);
   return (
     <div>

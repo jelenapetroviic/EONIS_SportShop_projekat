@@ -2,8 +2,10 @@ import { FaSearch, FaShoppingCart, FaUser } from "react-icons/fa";
 import ShoppingBacketIcon from "@mui/icons-material/ShoppingBasket";
 import Badge from "@mui/material/Badge";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const Navbar = () => {
+  const [search, setSearch] = useState("");
   return (
     <div className="flex items-center justify-between h-[100px] shadow-md px-6">
       <Link to="/">
@@ -17,8 +19,11 @@ const Navbar = () => {
           type="text"
           placeholder="search"
           className="p-[15px] border-2 border-[#f096dd] border-solid w-[500px] outline-none rounded-lg mr-[-30px]"
+          onChange={(e) => setSearch(e.target.value)}
         />
-        <FaSearch className="text-[20px] cursor-pointer" />
+        <Link to={`/products/${search}`}>
+          <FaSearch className="text-[20px] cursor-pointer" />
+        </Link>
       </div>
 
       <div className="flex items-center">
