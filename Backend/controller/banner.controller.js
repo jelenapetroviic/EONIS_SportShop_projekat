@@ -44,7 +44,7 @@ const getRandomBanner = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Banners were not fetched or something went wrong");
   } else {
-    const randomIndex = Math.floor(Math.random() * banners.lenght);
+    const randomIndex = Math.floor(Math.random() * banners.length);
     const randomBanner = banners[randomIndex];
     res.status(200).json(randomBanner);
   }
