@@ -3,6 +3,10 @@ import ReactStars from "react-stars";
 import { FaMinus, FaPlus } from "react-icons/fa";
 import { useLocation } from "react-router-dom";
 import { userRequest } from "../requestMethods";
+import { useDispatch, useSelector } from "react-redux";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { addProduct } from "../redux/cartRedux";
 
 const Product = () => {
   const location = useLocation();
@@ -12,7 +16,9 @@ const Product = () => {
   const [quantity, setQuantity] = useState(1);
   const [price, setPrice] = useState(0);
 
-  
+  const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
+
   useEffect(() => {
     const getProduct = async () => {
       try {
@@ -25,7 +31,6 @@ const Product = () => {
     getProduct();
   }, [id]);
 
-  
   const calculatePrice = (
     originalPrice,
     discountedPrice,
@@ -42,7 +47,6 @@ const Product = () => {
     }
   };
 
-  
   useEffect(() => {
     if (product && Object.keys(product).length > 0) {
       const newPrice = calculatePrice(
@@ -56,7 +60,6 @@ const Product = () => {
     }
   }, [product, quantity]);
 
-
   const handleQuantity = (action) => {
     if (action === "dec") {
       setQuantity((prev) => (prev === 1 ? 1 : prev - 1));
@@ -65,8 +68,40 @@ const Product = () => {
     }
   };
 
+  const handleAddToCart = () => {
+    dispatch(
+      addProduct({
+        ...product,
+        quantity,
+        price,
+        email: "jelenapetrovic@gmail.com",
+      })
+    );
+    toast.success("Product has been added to basket successfully", {
+      position: "top-right",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+    });
+
+    console.log(cart)
+  };
+
   return (
     <div className="h-auto flex justify-stretch p-[30px]">
+      <ToastContainer
+        position="top-right"
+        autoClose={5000}
+        hideProgressBar={false}
+        closeOnClick
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+      />
       {/* LEFT */}
       <div className="flex-1 h-[500px] w-[600px]">
         <img
@@ -88,8 +123,7 @@ const Product = () => {
             ? price * quantity
             : (price * quantity).toFixed(2)}{" "}
           <span className="text-gray-500 text-[15px] ml-2">
-            ({quantity} × $
-            {Number.isInteger(price) ? price : price.toFixed(2)})
+            ({quantity} × ${Number.isInteger(price) ? price : price.toFixed(2)})
           </span>
         </h2>
 
@@ -137,7 +171,10 @@ const Product = () => {
         </div>
 
         {/* ADD TO CART BUTTON */}
-        <button className="bg-[#1e1e1e] p-[10px] w-[200px] text-white cursor-pointer">
+        <button
+          className="bg-[#1e1e1e] p-[10px] w-[200px] text-white cursor-pointer"
+          onClick={handleAddToCart}
+        >
           Add to cart
         </button>
 
