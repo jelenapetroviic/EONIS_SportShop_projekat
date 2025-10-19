@@ -4,11 +4,13 @@ import { clearCart, removeProduct, updateQuantity } from "../redux/cartRedux";
 import { userRequest } from "../requestMethods";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { useState } from "react";
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user);
+  const [isCheckingOut, setIsCheckingOut] = useState(false);
 
   const handleRemoveProduct = async (product) => {
     try {
@@ -85,22 +87,45 @@ const Cart = () => {
   };
 
   const handleCheckout = async () => {
-    if (user.currentUser) {
-      try {
-        const res = await userRequest.post("/stripe/create-checkout-session", {
-          cart,
-          userId: user.currentUser._id,
-          email: user.currentUser.email,
-          name: user.currentUser.name,
-        });
-        if (res.data.url) {
-          window.location.href = res.data.url;
-        }
-      } catch (error) {
-        console.log(error.message);
-      }
-    } else {
+    if (!user.currentUser) {
       toast.error("Please login to proceed to checkout.");
+      return;
+    }
+
+    if (cart.products?.length === 0) {
+      toast.error("Your cart is empty!");
+      return;
+    }
+
+    setIsCheckingOut(true);
+    try {
+      console.log("Sending checkout request with data:", {
+        cart,
+        userId: user.currentUser._id,
+        email: user.currentUser.email,
+        name: user.currentUser.name,
+      });
+
+      const res = await userRequest.post("/stripe/create-checkout-session", {
+        cart,
+        userId: user.currentUser._id,
+        email: user.currentUser.email,
+        name: user.currentUser.name,
+      });
+
+      console.log("Checkout response:", res.data);
+
+      if (res.data.url) {
+        window.location.href = res.data.url;
+      } else {
+        toast.error("Failed to create checkout session. No URL received.");
+        setIsCheckingOut(false);
+      }
+    } catch (error) {
+      console.error("Checkout error:", error);
+      console.error("Error response:", error.response?.data);
+      toast.error(error.response?.data?.error || error.message || "Failed to proceed to checkout");
+      setIsCheckingOut(false);
     }
   };
 
@@ -205,10 +230,11 @@ const Cart = () => {
             </div>
 
             <button
-              className="bg-red-600 hover:bg-red-700 text-white p-3 w-full rounded-lg font-semibold shadow-md hover:shadow-lg transition-all mt-4"
+              className="bg-red-600 hover:bg-red-700 text-white p-3 w-full rounded-lg font-semibold shadow-md hover:shadow-lg transition-all mt-4 disabled:bg-gray-400 disabled:cursor-not-allowed"
               onClick={handleCheckout}
+              disabled={isCheckingOut || cart.products?.length === 0}
             >
-              Proceed to Checkout
+              {isCheckingOut ? "Processing..." : "Proceed to Checkout"}
             </button>
           </div>
         </div>
