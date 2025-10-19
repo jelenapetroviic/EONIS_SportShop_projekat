@@ -4,7 +4,7 @@ import asyncHandler from "express-async-handler";
 // CREATE ORDER
 
 const createOrder = asyncHandler(async (req, res) => {
-  const newOrder = Order(req.body);
+  const newOrder = new Order(req.body);
   const savedOrder = await newOrder.save();
   if (!savedOrder) {
     res.status(400);
@@ -43,7 +43,8 @@ const deleteOrder = asyncHandler(async (req, res) => {
 
 // GET USER ORDER
 const getUserOrder = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ userId: req.params.id }).exec();
+  // Only return completed orders (status >= 0), exclude pending orders (status -1)
+  const orders = await Order.find({ userId: req.params.id, status: { $gte: 0 } }).exec();
   // Return empty array if no orders found instead of throwing error
   res.status(200).json(orders.reverse());
 });
