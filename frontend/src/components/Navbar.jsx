@@ -1,54 +1,85 @@
-import { FaSearch, FaShoppingCart, FaUser } from "react-icons/fa";
-import ShoppingBacketIcon from "@mui/icons-material/ShoppingBasket";
-import Badge from "@mui/material/Badge";
+import { FaSearch, FaUser } from "react-icons/fa";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
+import Badge from "@mui/material/Badge";
 import { useSelector } from "react-redux";
+import { useState } from "react";
 
 const Navbar = () => {
-
-  const cart = useSelector((state) => state.cart);
-
+  const quantity = useSelector((state) => state.cart.quantity);
   const [search, setSearch] = useState("");
-  return (
-    <div className="flex items-center justify-between h-[100px] shadow-md px-6">
-      <Link to="/">
-        <div className="cursor-pointer m-2">
-          <img src="/blisslogo1.png" alt="" height="200px" width="150px"></img>
-        </div>
-      </Link>
+  const user = useSelector((state) => state.user);
 
-      <div className="flex items-center m-2">
+  return (
+    <nav className="flex items-center justify-between h-[80px] bg-white shadow-md px-10 sticky top-0 z-50 border-b border-gray-200">
+      {/* LOGO + TEXT */}
+      <div className="flex items-center cursor-pointer space-x-3">
+        <Link to="/" className="flex items-center space-x-3">
+          <img
+            src="/SportShop.jpg"
+            alt="Logo"
+            className="h-[60px] w-auto object-cover rounded-xl hover:opacity-90 transition duration-300"
+          />
+          <span className="text-2xl font-bold text-red-600 tracking-wide hover:text-red-700 transition">
+            Sport Shop
+          </span>
+        </Link>
+      </div>
+
+      {/* SEARCH BAR */}
+      <div className="flex items-center bg-gray-100 rounded-full px-4 py-2 w-[400px] focus-within:ring-2 focus-within:ring-red-500 transition">
         <input
           type="text"
-          placeholder="search"
-          className="p-[15px] border-2 border-[#f096dd] border-solid w-[500px] outline-none rounded-lg mr-[-30px]"
+          placeholder="Search for products..."
           onChange={(e) => setSearch(e.target.value)}
+          className="flex-1 bg-transparent outline-none text-gray-700 placeholder-gray-500 px-2"
         />
         <Link to={`/products/${search}`}>
-          <FaSearch className="text-[20px] cursor-pointer" />
+          <FaSearch className="text-gray-600 text-[18px] cursor-pointer hover:text-red-500 transition-all duration-200" />
         </Link>
       </div>
 
-      <div className="flex items-center">
-        <Link to="/cart">
-          <div className="mr-[20px] cursor-pointer">
-            <Badge badgeContent={cart.quantity} color="secondary">
-              <ShoppingBacketIcon className="text-pink-500" />
-            </Badge>
-          </div>
+      {/* ICONS */}
+      <div className="flex items-center space-x-6">
+        {/* CART */}
+        <Link
+          to="/cart"
+          className="relative group hover:scale-110 transition-transform duration-300"
+        >
+          <Badge
+            badgeContent={quantity}
+            color="secondary"
+            overlap="circular"
+            sx={{
+              "& .MuiBadge-badge": {
+                backgroundColor: "#ef4444",
+                color: "#fff",
+                fontWeight: "bold",
+              },
+            }}
+          >
+            <ShoppingBasketIcon className="text-gray-700 text-[28px] group-hover:text-red-600 transition-all duration-300" />
+          </Badge>
         </Link>
 
-        <Link to="/login">
-          <div className="flex items-center cursor-pointer space-x-2 border border-pink-300 p-2 rounded-lg hover:bg-pink-100 duration-300">
-          <FaUser className="text-[#e455c5] hover:text-pink-600 transition duration-300" />
-          <span className="text-[#e455c5]  hover:text-pink-600 font-semibold">
-            Login
-          </span>
-        </div>
+        {/* USER */}
+        <Link
+          to={!user.currentUser ? "/login" : "/myaccount"}
+          className="flex items-center gap-2 border border-gray-300 py-2 px-5 rounded-full hover:bg-red-500 hover:text-white transition-all duration-300"
+        >
+          <FaUser className="text-gray-700 group-hover:text-white transition duration-200" />
+          {!user.currentUser ? (
+            <span className="font-medium text-gray-700 group-hover:text-white">
+              Login
+            </span>
+          ) : (
+            <span className="font-medium text-gray-700 group-hover:text-white">
+              {user.currentUser.name}
+            </span>
+          )}
         </Link>
       </div>
-    </div>
+    </nav>
   );
 };
 

@@ -10,7 +10,7 @@ const createOrder = asyncHandler(async (req, res) => {
     res.status(400);
     throw new Error("Order was not created");
   } else {
-    res.status(201).json(saveOrder);
+    res.status(201).json(savedOrder);
   }
 });
 
@@ -43,12 +43,12 @@ const deleteOrder = asyncHandler(async (req, res) => {
 
 // GET USER ORDER
 const getUserOrder = asyncHandler(async (req, res) => {
-  const orders = await Order.find({ userId: req.params.id }).reverse();
-  if (!orders) {
+  const orders = await Order.find({ userId: req.params.id }).exec();
+  if (!orders || orders.length === 0) {
     res.status(400);
-    throw new Error("No order was found or something went wrong");
+    throw new Error("No orders were found for this user.");
   } else {
-    res.status(200).json(orders);
+    res.status(200).json(orders.reverse());
   }
 });
 

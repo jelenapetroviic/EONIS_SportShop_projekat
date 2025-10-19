@@ -2,32 +2,32 @@ import { useEffect, useState } from "react";
 import Product from "./Product";
 import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import {userRequest} from "../requestMethods";
+import { userRequest } from "../requestMethods";
 
 const Products = ({ filters, sort, query }) => {
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
 
-  console.log(products)
+  console.log(products);
 
   useEffect(() => {
-  const getProducts = async () => {
-    try {
-      let res;
+    const getProducts = async () => {
+      try {
+        let res;
 
-      if (query) {
-        res = await userRequest.get(`/products?search=${query}`);
-      } else {
-        res = await userRequest.get("/products");
+        if (query) {
+          res = await userRequest.get(`/products?search=${query}`);
+        } else {
+          res = await userRequest.get("/products");
+        }
+
+        setProducts(res.data);
+      } catch (error) {
+        console.log(error);
       }
-
-      setProducts(res.data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-  getProducts();
-}, [query]);
+    };
+    getProducts();
+  }, [query]);
 
   useEffect(() => {
     let tempProducts = [...products];
@@ -60,14 +60,16 @@ const Products = ({ filters, sort, query }) => {
   }, [products, filters, sort]);
 
   return (
-    <div className="flex flex-wrap mx-[40px]">
-      {filteredProducts.map((product, index) => (
-        
-        <Link to={`/product/${product._id}`}>
-          <Product img={product.img} title={product.title}/>
+    <div className="flex flex-wrap justify-center gap-8 p-8 bg-gray-50">
+      {filteredProducts.map((product) => (
+        <Link
+          key={product._id}
+          to={`/product/${product._id}`}
+          className="transition-transform duration-300 hover:scale-105"
+        >
+          <Product img={product.img} title={product.title} />
         </Link>
-      ))
-      }
+      ))}
     </div>
   );
 };
