@@ -1,4 +1,3 @@
-import { LineChart } from "@mui/x-charts/LineChart";
 import { useEffect, useState } from "react";
 import { FaUpload } from "react-icons/fa";
 import { Link, useLocation } from "react-router-dom";
@@ -21,166 +20,106 @@ const Product = () => {
     };
 
     getProduct();
-  }, []);
+  }, [id]);
 
   const handleChange = (e) => {
-    setInputs((prev) => {
-      return { ...prev, [e.target.name]: e.target.value };
-    });
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  const handleUpdate = async() =>{
+  const handleUpdate = async () => {
     try {
-      await userRequest.put(`/product/${id}`, {...inputs})
+      await userRequest.put(`/product/${id}`, { ...inputs });
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
-  }
+  };
 
   return (
-    <div className="p-5 w-[70vw]">
-      {/* FIRST PART */}
-      <div className="flex items-center justify-between mb-5">
-        <h3 className="text-3xl font-semibold">Product</h3>
+    <div className="p-6 w-[60vw] bg-[#faf9f6] rounded-xl shadow-md mx-auto mt-5 ml-12">
+      {/* HEADER */}
+      <div className="flex items-center justify-between mb-6">
+        <h3 className="text-2xl font-semibold text-gray-800 tracking-wide">
+          Product
+        </h3>
         <Link to="/newproduct">
-          <button className="bg-slate-500 text-white py-2 px-4 rounded">
+          <button className="bg-red-500 hover:bg-red-600 text-white py-2 px-5 rounded-md transition-all shadow-md">
             Create
           </button>
         </Link>
       </div>
-      {/* SECOND PART */}
-      <div className="flex flex-col md:flex-row gap-5">
-        {/* CHART */}
-        <div className="flex-1">
-          <LineChart
-            xAxis={[{ data: [1, 2, 3, 5, 8, 10] }]}
-            series={[
-              {
-                data: [2, 5.5, 2, 8.5, 1.5, 5],
-              },
-            ]}
-            height={250}
-            width={500}
-            margin={{ left: 30, right: 30, top: 30, bottom: 30 }}
-            grid={{ vertical: true, horizontal: true }}
-          />
-        </div>
 
-        {/* PRODUCT CARD */}
-
-        <div className="flex-1 bg-white p-5 shadow-lg rounded-lg">
-          <div className="flex items-center mb-5">
-            <img
-              src={product.img}
-              alt=""
-              className="h-20 w-20 rounded-full mr-5"
-            />
-
-            <span className="text-2xl font-semibold">
-              Hydrating Facial Cleanser
-            </span>
-          </div>
-
-          <div className="space-y-3">
-            <div className="flex justify-between">
-              <span className="font-semibold">ID:</span>
-              <span>{product._id}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold">Sales:</span>
-              <span>{product._id}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="font-semibold">In stock:</span>
-              <span>Yes</span>
-            </div>
-          </div>
-        </div>
+      {/* PRODUCT PREVIEW */}
+      <div className="flex flex-col items-center mb-6">
+        <img
+          src={product.img}
+          alt=""
+          className="h-28 w-28 rounded-full object-cover border border-red-300 shadow-sm mb-4"
+        />
+        <span className="text-2xl font-semibold text-gray-800">
+          {product.title || "Product name"}
+        </span>
+        <p className="text-gray-500 mt-2 text-center max-w-[480px] text-[15px]">
+          {product.desc || "No description available for this product."}
+        </p>
       </div>
 
-      {/* THIRD PART */}
+      {/* FORM SECTION */}
+      <div className="bg-white p-5 rounded-xl shadow-sm border border-gray-100">
+        <form className="flex flex-col md:flex-row gap-5">
+          {/* LEFT SIDE */}
+          <div className="flex-1 space-y-4">
+            {[
+              { label: "Product Name", name: "title", type: "text", value: product.title },
+              { label: "Product Description", name: "desc", type: "text", value: product.desc },
+              { label: "Product Original Price", name: "originalPrice", type: "number", value: product.originalPrice },
+              { label: "Product Discounted Price", name: "discountedPrice", type: "number", value: product.discountedPrice },
+            ].map((field, index) => (
+              <div key={index}>
+                <label className="block mb-2 font-semibold text-gray-800 text-[15px]">
+                  {field.label}
+                </label>
+                <input
+                  type={field.type}
+                  name={field.name}
+                  placeholder={field.value}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded-md focus:border-red-400 focus:ring-red-300 focus:ring-1 outline-none"
+                />
+              </div>
+            ))}
 
-      <div className="mt-5 bg-white p-5 shadow-lg rounded-lg">
-        <form action="" className="flex flex-col md:flex-row gap-5">
-          {/* LEFT */}
-          <div className="flex-1 space-y-5">
             <div>
-              <label htmlFor="" className="block mb-2 font-semibold">
-                Product Name
-              </label>
-              <input
-                type="text"
-                name="title"
-                placeholder={product.title}
-                className="w-full p-2 border border-gray-200 rounded"
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="" className="block mb-2 font-semibold">
-                Product Description
-              </label>
-              <input
-                type="text"
-                name="desc"
-                placeholder={product.desc}
-                className="w-full p-2 border border-gray-200 rounded"
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="" className="block mb-2 font-semibold">
-                Product Original Price
-              </label>
-              <input
-                type="number"
-                name="originalPrice"
-                placeholder={product.originalPrice}
-                className="w-full p-2 border border-gray-200 rounded"
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="" className="block mb-2 font-semibold">
-                Product Discounted Price
-              </label>
-              <input
-                type="number"
-                name="discountedPrice"
-                placeholder={product.discountedPrice}
-                className="w-full p-2 border border-gray-200 rounded"
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="" className="block mb-2 font-semibold">
-                InStock
+              <label className="block mb-2 font-semibold text-gray-800 text-[15px]">
+                In Stock
               </label>
               <select
-                name=""
-                id=""
-                className="w-full p-2 border border-gray-200 rounded"
+                name="inStock"
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md focus:border-red-400 focus:ring-red-300 focus:ring-1 outline-none"
               >
-                <option value="">Yes</option>
-                <option value="">No</option>
+                <option value="true">Yes</option>
+                <option value="false">No</option>
               </select>
             </div>
           </div>
 
-          {/* RIGHT */}
-          <div className="flex-1 flex flex-col items-center space-y-5">
+          {/* RIGHT SIDE */}
+          <div className="flex-1 flex flex-col items-center justify-center">
             <div className="flex flex-col items-center">
               <img
                 src={product.img}
                 alt=""
-                className="h-40 w-40 rounded-full mr-5"
+                className="h-36 w-36 rounded-full object-cover border border-red-300 shadow-sm"
               />
-
-              <label htmlFor="" className="cursor-pointer mt-5">
-                <FaUpload className="text-2xl text-gray-700" />
+              <label className="cursor-pointer mt-4">
+                <FaUpload className="text-2xl text-gray-600 hover:text-red-500 transition-colors" />
               </label>
 
-              <button className="bg-slate-500 text-white py-2 px-4 rounded mt-5" onClick={handleUpdate}>
+              <button
+                type="button"
+                onClick={handleUpdate}
+                className="bg-red-500 hover:bg-red-600 text-white py-2 px-6 rounded-md mt-4 shadow-md transition-all"
+              >
                 Update
               </button>
             </div>

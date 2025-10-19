@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { userRequest } from "../requestMethods";
 import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Register = () => {
   const [name, setName] = useState("");
@@ -14,7 +15,8 @@ const Register = () => {
 
     try {
       await userRequest.post("/auth/register", { name, email, password });
-      navigate("/login");
+      toast.success("Account created successfully!");
+      setTimeout(() => navigate("/login"), 2000);
     } catch (error) {
       if (error.response && error.response.data.message) {
         toast.error(error.response.data.message);
@@ -23,88 +25,82 @@ const Register = () => {
       }
     }
   };
-  
+
   return (
-    <div className="flex items-center justify-center mt-[5%]">
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-      />
+    <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-[#fff5f5] via-[#fff1f1] to-[#ffe9e9]">
+      <ToastContainer position="top-right" autoClose={4000} />
 
-      <div className="flex items-center bg-white shadow-lg rounded-lg overflow-hidden">
-        {/* IMAGE */}
+      <div className="bg-white/90 backdrop-blur-sm shadow-[0_8px_30px_rgba(255,99,99,0.15)] rounded-3xl px-12 py-14 w-[500px] border border-[#ffd5d5]">
+        <h2 className="text-4xl font-extrabold text-gray-800 text-center mb-10 tracking-wide">
+          Create Account <span className="text-[#e84a4a]">❤️</span>
+        </h2>
 
-        <div className="h-[500px] w-[500px] transition-transform duration-700 ease-in-out transform hover:scale-105">
-          <img
-            src="/lotion1.jpg"
-            alt="login"
-            className="object-cover h-full w-full"
-          />
-        </div>
-
-        {/* FORM */}
-
-        <div className="p-10 w-[500px]">
-          <h2 className="text-xl font-bold text-gray-700 mb-5">
-            Create Account
-          </h2>
-
-          <form className="spay-y-5">
-            <div className="mb-5">
-              <label htmlFor="" className="block text-gray-600 mb-1">
-                Full Name
-              </label>
-              <input
-                type="text"
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d55fbb]"
-                placeholder="John Doe"
-                onChange={(e) => setName(e.target.value)}
-              />
-            </div>
-            <div className="mb-5">
-              <label htmlFor="" className="block text-gray-600 mb-1">
-                Email
-              </label>
-              <input
-                type="text"
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d55fbb]"
-                placeholder="example@example.com"
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </div>
-            <div className="mb-5">
-              <label htmlFor="" className="block text-gray-600 mb-1">
-                Password
-              </label>
-              <input
-                type="password"
-                className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#d55fbb]"
-                placeholder="********"
-                onChange={(e) => setPassword(e.target.value)}
-              />
-            </div>
-
-            <button
-              className="w-full py-2 bg-[#d55fbb] text-white font-bold rounded-md transition-transform duration-500 hover:bg-blue-200 focus:outline-none focus:ring-red-500 transform hover:scale-105"
-              onClick={handleRegister}
+        <form className="space-y-7">
+          <div>
+            <label
+              htmlFor="name"
+              className="block text-gray-700 mb-2 font-semibold text-lg"
             >
-              Create account
-            </button>
+              Full Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              className="w-full px-5 py-3 border border-[#f3d1d1] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#e84a4a] transition text-gray-900 placeholder-gray-400"
+              placeholder="John Doe"
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
 
-            <div className="mt-4 text-sm text-gray-600">
-              <span>Have an account already?</span>
-              <Link to="/login" className="text-red-500 hover:underline ml-1">
-                Login
-              </Link>
-            </div>
-          </form>
+          <div>
+            <label
+              htmlFor="email"
+              className="block text-gray-700 mb-2 font-semibold text-lg"
+            >
+              Email
+            </label>
+            <input
+              type="email"
+              id="email"
+              className="w-full px-5 py-3 border border-[#f3d1d1] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#e84a4a] transition text-gray-900 placeholder-gray-400"
+              placeholder="example@example.com"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label
+              htmlFor="password"
+              className="block text-gray-700 mb-2 font-semibold text-lg"
+            >
+              Password
+            </label>
+            <input
+              type="password"
+              id="password"
+              className="w-full px-5 py-3 border border-[#f3d1d1] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#e84a4a] transition text-gray-900 placeholder-gray-400"
+              placeholder="********"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <button
+            type="submit"
+            onClick={handleRegister}
+            className="w-full py-4 bg-gradient-to-r from-[#e84a4a] to-[#d43737] text-white font-bold text-lg rounded-xl shadow-md transform transition-all duration-300 hover:scale-[1.03] hover:shadow-lg"
+          >
+            Create Account
+          </button>
+        </form>
+
+        <div className="mt-8 text-base text-center text-gray-700">
+          <span>Already have an account? </span>
+          <Link
+            to="/login"
+            className="text-[#e84a4a] font-semibold hover:underline hover:text-[#d43737] transition"
+          >
+            Login
+          </Link>
         </div>
       </div>
     </div>

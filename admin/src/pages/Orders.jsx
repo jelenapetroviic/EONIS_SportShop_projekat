@@ -1,69 +1,111 @@
-import {DataGrid} from "@mui/x-data-grid"
-import {FaCheckCircle, FaCheckDouble, FaClock} from "react-icons/fa";
+import { DataGrid } from "@mui/x-data-grid";
+import { Link } from "react-router-dom";
+import { FaCheckCircle, FaCheckDouble, FaClock } from "react-icons/fa";
+import { useState, useEffect } from "react";
+import { userRequest } from "../requestMethods";
 
 const Orders = () => {
+  const [orders, setOrders] = useState([]);
+
+  const handleUpdateOrder = async (id) => {
+    try {
+      await userRequest.put(`/orders/${id}`, { status: 2 });
+      window.location.reload();
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const columns = [
-    { field: "_id", headerName: "Order ID", width: 100 },
-    { field: "name", headerName: "Customer Name", width: 200 },
-    { field: "email", headerName: "Customer Email", width: 150 },
+    { field: "_id", headerName: "Order ID", width: 120 },
+    { field: "name", headerName: "Customer Name", width: 220 },
+    { field: "email", headerName: "Customer Email", width: 230 },
     {
       field: "status",
       headerName: "Status",
-      width: 100,
-      renderCell: (params) =>{
-        return (
-          <>
-            {params.row.status === 0 || params.row.status === 1 ? (
-              <FaClock className="text-yellow-500 text-[25px] cursor-pointer mt-2" />
-            ) : (
-              <FaCheckDouble className="text-green-500 text-[25px]" />
-            )}
-          </>
-        );
-      },
+      width: 120,
+      renderCell: (params) => (
+        <>
+          {params.row.status === 0 || params.row.status === 1 ? (
+            <div className="flex items-center gap-2 text-yellow-600 font-medium">
+              <FaClock className="text-[22px]" />
+              Pending
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-green-600 font-medium">
+              <FaCheckDouble className="text-[22px]" />
+              Delivered
+            </div>
+          )}
+        </>
+      ),
     },
     {
       field: "Deliver",
       headerName: "Mark as Delivered",
-      width: 150,
-      renderCell: (params) =>{
-        return (
-          <>
-            {params.row.status === 0 || params.row.status === 1 ? (
-              <FaCheckCircle className="text-[25px] cursor-pointer mt-2" 
-              
-              />
-            ) : (
-              ""
-            )}
-          </>
-        );
-      },
+      width: 180,
+      renderCell: (params) =>
+        params.row.status === 1 || params.row.status === 0 ? (
+          <button
+            onClick={() => handleUpdateOrder(params.row._id)}
+            className="flex items-center gap-2 bg-red-500 hover:bg-red-600 transition-all duration-200 text-white px-3 py-1 rounded-full shadow-sm"
+          >
+            <FaCheckCircle className="text-[18px]" />
+            Mark Done
+          </button>
+        ) : (
+          <span className="text-gray-400">—</span>
+        ),
     },
   ];
 
-  const data = [
-    { _id: "o101", name: "Alice Johnson", email: "alice@example.com", status: 1 },
-    { _id: "o102", name: "Alice Johnson", email: "alice@example.com", status: 0 },
-    { _id: "o103", name: "Alice Johnson", email: "alice@example.com", status: 2 },
-    { _id: "o104", name: "Alice Johnson", email: "alice@example.com", status: 1 },
-    { _id: "o105", name: "Alice Johnson", email: "alice@example.com", status: 0 },
-    { _id: "o106", name: "Alice Johnson", email: "alice@example.com", status: 1 },
-    { _id: "o107", name: "Alice Johnson", email: "alice@example.com", status: 2 },
-    { _id: "o108", name: "Alice Johnson", email: "alice@example.com", status: 0 },
-  ];
+  useEffect(() => {
+    const getOrders = async () => {
+      try {
+        const res = await userRequest.get("/orders");
+        setOrders(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getOrders();
+  }, []);
 
   return (
-    <div className="p-5 w-[70vw]">
-          <div className="flex items-center justify-between m-[30px]">
-            <h1 className="m-[20px] text-[20px]">Orders</h1>
-          </div>
-          <div className="m-[30px]">
-            <DataGrid getRowId={(row) => row._id} rows={data} checkboxSelection columns={columns} />
-          </div>
-        </div>
-  )
-}
+    <div className="w-[72vw] bg-white rounded-2xl shadow-md p-6 border border-red-400 mt-10 ml-10">
+      <div className="flex items-center justify-between mb-6">
+        <h1 className="text-[24px] font-semibold text-red-600">
+          All Orders
+        </h1>
+        <Link to="/neworder">
+          <button className="bg-red-500 hover:bg-red-600 transition-all text-white px-5 py-2 rounded-lg font-semibold shadow-md">
+            Create
+          </button>
+        </Link>
+      </div>
 
-export default Orders
+      <div className="h-[70vh]">
+        <DataGrid
+          rows={orders}
+          columns={columns}
+          getRowId={(row) => row._id}
+          checkboxSelection
+          sx={{
+            border: "none",
+            "& .MuiDataGrid-columnHeaders": {
+              backgroundColor: "#ffe5e5",
+              color: "#b91c1c",
+              fontWeight: 600,
+              fontSize: "16px",
+            },
+            "& .MuiDataGrid-row:hover": {
+              backgroundColor: "#fff5f5",
+            },
+          }}
+        />
+      </div>
+    </div>
+  );
+};
+
+export default Orders;

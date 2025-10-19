@@ -1,146 +1,147 @@
 import ReactStars from "react-stars";
 import { FaCheckCircle } from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { userRequest } from "../requestMethods";
+import { useSelector } from "react-redux";
 
 const Order = () => {
+  const user = useSelector((state) => state.user);
+  const [orders, setOrders] = useState([]);
+  const [rating, setRating] = useState(0);
+  const [comment, setComment] = useState("");
+
+  useEffect(() => {
+    const getUserOrder = async () => {
+      try {
+        const res = await userRequest.get(`/orders/find/${user.currentUser._id}`);
+        setOrders(res.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getUserOrder();
+  }, [user]);
+
   return (
-    <div className="min-h-screen bg-gray-50 p-8">
-      <div className="max-w-4xl mx-auto bg-white shadow-md rounded-lg p-6">
-        <div className="text-center mb-8">
-          <FaCheckCircle className="text-green-500 text-6xl mx-auto mb-4" />
-          <h1 className="text-3xl font-bold">Thank You for Your Orders!</h1>
+    <div className="min-h-screen bg-gradient-to-br from-[#fff7f6] via-[#fff0f1] to-[#fff8f8] p-8">
+      <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-2xl p-8 border border-[#f4d1d1]">
+        
+        {/* HEADER */}
+        <div className="text-center mb-10">
+          <FaCheckCircle className="text-green-400 text-6xl mx-auto mb-4" />
+          <h1 className="text-3xl font-bold text-[#333]">Thank You for Your Order!</h1>
           <p className="text-gray-600 mt-2">
-            Here are details of your recent orders.
+            Here’s a summary of your recent purchase.
           </p>
         </div>
 
-        <div className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4">Order #1</h2>
-          <div className="space-y-4">
-            <div className="bg-gray-50 p-4 rounded-lg">
-              <h3 className="text-xl font-semibold mb-2">Items Ordered</h3>
+        {/* ORDERS */}
+        {orders.map((order, index) => (
+          <div
+            className="mb-10 border border-gray-100 rounded-xl shadow-sm bg-[#fff6f6] p-6"
+            key={index}
+          >
+            <h2 className="text-2xl font-semibold text-[#e63946] mb-4">
+              Order #{order._id}
+            </h2>
 
-              <div className="flex flex-col">
-                <div className="mb-4">
-                  <div className="flex items-center justify-evenly border-b border-gray-200 pb-4">
-                    <img
-                      src="/lotion.jpg"
-                      alt=""
-                      className="w-24 h-24 rounded-md object-cover"
-                    />
-                    <div className="flex-1 ml-4">
-                      <h4 className="text-lg font-semibold">
-                        Mekis Grapeseed &Sweet Almond Oil-30Ml, For Dull
-                      </h4>
-                      <p className="text-gray-600">2</p>
+            <div className="space-y-6">
+              {order.products.map((product, i) => (
+                <div
+                  className="bg-white rounded-lg p-5 shadow-sm hover:shadow-md transition"
+                  key={i}
+                >
+                  <div className="flex items-center justify-between border-b border-gray-100 pb-4 mb-4">
+                    <div className="flex items-center gap-4">
+                      <img
+                        src={product.img}
+                        alt=""
+                        className="w-24 h-24 rounded-lg object-cover border border-gray-200"
+                      />
+                      <div>
+                        <h4 className="text-lg font-semibold text-[#333]">
+                          {product.title}
+                        </h4>
+                        <p className="text-gray-600">Qty: {product.quantity}</p>
+                      </div>
                     </div>
-
-                    <div className="text-right">
-                      <p className="text-lg font-bold">$90</p>
-                    </div>
+                    <p className="text-lg font-bold text-[#e63946]">
+                      ${product.price}
+                    </p>
                   </div>
 
-                  <div className="flex flex-col">
-                    <h3 className="my-3">Rate this product</h3>
+                  {/* Rating Section */}
+                  <div className="mt-2">
+                    <h3 className="text-[#e63946] font-medium mb-2">
+                      Rate this product:
+                    </h3>
                     <ReactStars
                       count={5}
-                      value={2.8}
-                      size={30}
-                      color1={"#ccc"}
-                      color2={"#aaa"}
-                      edit={false}
+                      value={rating}
+                      size={28}
+                      color1={"#ddd"}
+                      color2={"#e63946"}
+                      onChange={(newRating) => setRating(newRating)}
                     />
                     <textarea
-                      name=""
-                      id=""
-                      placeholder="leave a message"
-                      className="p-[10px] w-[300px] mt-3"
+                      placeholder="Leave your comment..."
+                      value={comment}
+                      onChange={(e) => setComment(e.target.value)}
+                      className="w-full mt-3 p-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-[#f4b2b0] outline-none bg-white"
                     ></textarea>
-                    <button className="bg-[#1e1e1e] mt-3 w-[200px] p-[5px] text-white">
+                    <button className="mt-3 bg-[#e63946] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#d62828] transition">
                       Submit
                     </button>
                   </div>
                 </div>
-
-                <div className="mb-4">
-                  <div className="flex items-center justify-evenly border-b border-gray-200 pb-4">
-                    <img
-                      src="/lotion.jpg"
-                      alt=""
-                      className="w-24 h-24 rounded-md object-cover"
-                    />
-                    <div className="flex-1 ml-4">
-                      <h4 className="text-lg font-semibold">
-                        Mekis Grapeseed &Sweet Almond Oil-30Ml, For Dull
-                      </h4>
-                      <p className="text-gray-600">2</p>
-                    </div>
-
-                    <div className="text-right">
-                      <p className="text-lg font-bold">$90</p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col">
-                    <h3 className="my-3">Rate this product</h3>
-                    <ReactStars
-                      count={5}
-                      value={2.8}
-                      size={30}
-                      color1={"#ccc"}
-                      color2={"#aaa"}
-                      edit={false}
-                    />
-                    <textarea
-                      name=""
-                      id=""
-                      placeholder="leave a message"
-                      className="p-[10px] w-[300px] mt-3"
-                    ></textarea>
-                    <button className="bg-[#1e1e1e] mt-3 w-[200px] p-[5px] text-white">
-                      Submit
-                    </button>
-                  </div>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
+        ))}
+
+        {/* SHIPPING INFO */}
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm mb-5">
+          <h3 className="text-xl font-semibold text-[#e63946] mb-2">
+            Shipping Information
+          </h3>
+          <p className="text-gray-700">jelenapee123@gmail.com</p>
+          <p className="text-gray-700">+(656) 678 567</p>
+          <p className="text-gray-700">Jelena Petrovic</p>
         </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="text-xl font-semibold mb-2">Shipping Information</h3>
-          <p className="text-gray-600">jelenapee123@gmail.com</p>
-          <p className="text-gray-600">+(656) 678 567</p>
-          <p className="text-gray-600">Jelena Petrovic</p>
+        {/* PAYMENT */}
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm mb-5">
+          <h3 className="text-xl font-semibold text-[#e63946] mb-2">
+            Payment Method
+          </h3>
+          <p className="text-gray-700">VISA</p>
         </div>
 
-        <div className="bg-gray-50 p-4 rounded-lg my-2">
-          <h3 className="text-xl font-semibold mb-2">Payment Method</h3>
-          <p className="text-gray-600">VISA</p>
-        </div>
-
-        <div className="bg-gray-50 p-4 rounded-lg">
-          <h3 className="text-xl font-semibold mb-2">Order summary</h3>
-          <div className="flex justify-between mb-2">
-            <span className="text-lg font-medium">Subtotal:</span>
-            <span className="text-lg font-semibold">$720</span>
+        {/* SUMMARY */}
+        <div className="bg-white p-5 rounded-xl border border-gray-100 shadow-sm">
+          <h3 className="text-xl font-semibold text-[#e63946] mb-3">
+            Order Summary
+          </h3>
+          <div className="flex justify-between mb-2 text-gray-700">
+            <span>Subtotal:</span>
+            <span className="font-medium">$720</span>
           </div>
-          <div className="flex justify-between mb-2">
-            <span className="text-lg font-medium">Shipping:</span>
-            <span className="text-lg font-semibold">$10</span>
+          <div className="flex justify-between mb-2 text-gray-700">
+            <span>Shipping:</span>
+            <span className="font-medium">$10</span>
           </div>
-
-          <div className="flex justify-between mb-2">
-            <span className="text-lg font-medium">Total:</span>
-            <span className="text-lg font-semibold">$730</span>
+          <div className="flex justify-between border-t border-gray-200 pt-2 text-lg">
+            <span className="font-semibold text-[#4a4a4a]">Total:</span>
+            <span className="font-bold text-[#e63946]">$730</span>
           </div>
         </div>
 
-        <div className="mt-8 text-center">
-          <button className="bg-[#ef93db] text-white p-3 rounded-lg font-semibold">
+        {/* BUTTON */}
+        <div className="mt-10 text-center">
+          <button className="bg-[#e63946] text-white px-8 py-3 rounded-full font-semibold text-lg shadow-md hover:bg-[#d62828] transition">
             Continue Shopping
           </button>
         </div>
-        
       </div>
     </div>
   );
