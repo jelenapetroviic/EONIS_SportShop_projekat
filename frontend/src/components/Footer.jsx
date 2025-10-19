@@ -1,4 +1,5 @@
 const Footer = () => {
+  
   return (
     <footer className="bg-white border-t border-gray-200 text-gray-800 px-8 md:px-24 py-16 mt-auto">
       {/* UPPER SECTION */}

@@ -16,7 +16,7 @@ import { Link } from "react-router-dom";
 const Menu = () => {
   const handleExit = () => {
     // Just redirect back to frontend without logging out
-    window.location.href = "http://localhost:5174";
+    window.location.href = "http://localhost:5173";
   };
 
   return (

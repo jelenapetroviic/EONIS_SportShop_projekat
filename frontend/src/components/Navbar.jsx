@@ -15,7 +15,7 @@ const Navbar = () => {
   const cartBadgeCount = cart.products.length > 0 ? 1 : 0;
 
   const handleAdminDashboard = () => {
-    window.location.href = "http://localhost:5173";
+    window.location.href = "http://localhost:5174";
   };
 
   return (

@@ -18,6 +18,7 @@ const Product = () => {
 
   const dispatch = useDispatch();
   const cart = useSelector((state) => state.cart);
+  const user = useSelector((state) => state.user);
 
   // Fetch product by ID
   useEffect(() => {
@@ -64,6 +65,15 @@ const Product = () => {
   };
 
   const handleAddToCart = async () => {
+    // Check if user is admin
+    if (user.currentUser?.role === "admin") {
+      toast.error("❌ Admin users cannot add products to cart!", {
+        position: "top-right",
+        autoClose: 4000,
+      });
+      return;
+    }
+
     // Check if product is in stock
     if (!product.inStock || product.stock === 0) {
       toast.error("❌ Product is out of stock!", {
@@ -243,14 +253,16 @@ const Product = () => {
             {/* Add to Cart Button */}
             <button
               className={`py-4 px-10 rounded-full shadow-xl font-bold text-lg tracking-wide transition-all duration-300 w-full lg:w-auto ${
-                !product.inStock || product.stock === 0
+                !product.inStock || product.stock === 0 || user.currentUser?.role === "admin"
                   ? "bg-gray-400 cursor-not-allowed"
                   : "bg-gradient-to-r from-red-600 to-red-700 hover:from-red-700 hover:to-red-800 text-white transform hover:scale-105 active:scale-95"
               }`}
               onClick={handleAddToCart}
-              disabled={!product.inStock || product.stock === 0}
+              disabled={!product.inStock || product.stock === 0 || user.currentUser?.role === "admin"}
             >
-              {!product.inStock || product.stock === 0
+              {user.currentUser?.role === "admin"
+                ? "Admin Cannot Order"
+                : !product.inStock || product.stock === 0
                 ? "Out of Stock"
                 : "Add to Cart"}
             </button>

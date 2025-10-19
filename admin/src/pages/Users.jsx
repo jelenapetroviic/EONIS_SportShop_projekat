@@ -4,23 +4,68 @@ import { useEffect, useState } from "react";
 import { userRequest } from "../requestMethods";
 
 const Users = () => {
+  const [users, setUsers] = useState([]);
+
+  const handleDeleteUser = async (id) => {
+    if (window.confirm("Da li ste sigurni da želite obrisati ovog korisnika?")) {
+      try {
+        await userRequest.delete(`/users/${id}`);
+        setUsers(users.filter((user) => user._id !== id));
+      } catch (error) {
+        console.log(error);
+        alert("Greška pri brisanju korisnika!");
+      }
+    }
+  };
+
+  const handleRoleChange = async (id, newRole) => {
+    try {
+      await userRequest.put(`/users/${id}`, { role: newRole });
+      setUsers(users.map((user) =>
+        user._id === id ? { ...user, role: newRole } : user
+      ));
+    } catch (error) {
+      console.log(error);
+      alert("Greška pri promeni uloge!");
+    }
+  };
+
   const columns = [
     { field: "_id", headerName: "ID", width: 100 },
     { field: "name", headerName: "Name", width: 180 },
     { field: "email", headerName: "Email", width: 220 },
     { field: "phone", headerName: "Phone", width: 160 },
-    { field: "role", headerName: "Role", width: 140 },
+    {
+      field: "role",
+      headerName: "Role",
+      width: 160,
+      renderCell: (params) => (
+        <select
+          value={params.row.role}
+          onChange={(e) => handleRoleChange(params.row._id, e.target.value)}
+          className="bg-white border border-gray-300 rounded-lg px-3 py-1.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 cursor-pointer transition-all"
+          style={{
+            color: params.row.role === "admin" ? "#dc2626" : "#374151",
+            fontWeight: params.row.role === "admin" ? "600" : "500",
+          }}
+        >
+          <option value="user">User</option>
+          <option value="admin">Admin</option>
+        </select>
+      ),
+    },
     {
       field: "delete",
       headerName: "Delete",
       width: 120,
-      renderCell: () => (
-        <FaTrash className="text-red-500 hover:text-red-600 transition cursor-pointer text-[18px]" />
+      renderCell: (params) => (
+        <FaTrash
+          onClick={() => handleDeleteUser(params.row._id)}
+          className="text-red-500 hover:text-red-600 transition cursor-pointer text-[18px]"
+        />
       ),
     },
   ];
-
-  const [users, setUsers] = useState([]);
 
   useEffect(() => {
     const getUsers = async () => {
