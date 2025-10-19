@@ -61,99 +61,124 @@ const Banners = () => {
   };
 
   return (
-    <div className="min-h-screen bg-[#fafafa] flex justify-center py-16 px-8">
-      {/* LEFT */}
-      <div className="w-[50%] pr-10">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800 border-b-4 border-red-400 pb-2">
-          Active Banners
-        </h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 w-full py-10 px-6">
+      <div className="max-w-7xl mx-auto">
+        <h1 className="text-4xl font-extrabold text-gray-800 mb-8 text-center">
+          Banner Management
+        </h1>
 
-        <div className="grid grid-cols-1 gap-6">
-          {banners?.map((banner, index) => (
-            <div
-              key={index}
-              className="flex items-center bg-white border border-gray-200 rounded-xl shadow-sm hover:shadow-md transition p-4"
-            >
-              <img
-                src={banner.img}
-                alt=""
-                className="w-28 h-28 object-cover rounded-md border border-gray-300"
-              />
-              <div className="flex-1 ml-4">
-                <h3 className="text-lg font-semibold text-gray-800">
-                  {banner.title}
-                </h3>
-                <p className="text-gray-500">{banner.subtitle}</p>
-              </div>
-              <button
-                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md transition font-semibold"
-                onClick={() => handleDelete(banner._id)}
-              >
-                Delete
-              </button>
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* LEFT - Active Banners */}
+          <div className="lg:col-span-2 space-y-6">
+            <div className="bg-white rounded-2xl shadow-lg p-6 border border-gray-200">
+              <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center gap-3 border-b-4 border-red-400 pb-3">
+                <span className="text-red-500">📋</span> Active Banners
+              </h2>
+
+              {banners.length === 0 ? (
+                <div className="text-center py-12 text-gray-500">
+                  <p className="text-lg">No banners yet. Add your first banner!</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {banners?.map((banner, index) => (
+                    <div
+                      key={index}
+                      className="flex items-center bg-gradient-to-r from-gray-50 to-white border-2 border-gray-200 rounded-xl shadow-sm hover:shadow-lg hover:border-red-300 transition-all duration-300 p-5"
+                    >
+                      <img
+                        src={banner.img}
+                        alt=""
+                        className="w-32 h-32 object-cover rounded-lg border-2 border-gray-300 shadow-md"
+                      />
+                      <div className="flex-1 ml-6">
+                        <h3 className="text-xl font-bold text-gray-800 mb-1">
+                          {banner.title}
+                        </h3>
+                        <p className="text-gray-600 text-sm">{banner.subtitle}</p>
+                      </div>
+                      <button
+                        className="bg-red-500 hover:bg-red-600 text-white px-6 py-3 rounded-lg transition-all duration-300 font-semibold shadow-md hover:shadow-lg transform hover:scale-105"
+                        onClick={() => handleDelete(banner._id)}
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
 
-      {/* RIGHT */}
-      <div className="w-[40%]">
-        <div className="bg-white border-2 border-red-400 rounded-2xl shadow-lg p-8 transition">
-          <h3 className="text-xl font-semibold mb-6 text-gray-800 border-b-2 border-red-300 pb-2">
-            Add New Banner
-          </h3>
+          {/* RIGHT - Add New Banner */}
+          <div className="lg:col-span-1">
+            <div className="bg-white border-2 border-red-400 rounded-2xl shadow-xl p-8 sticky top-6">
+              <h3 className="text-2xl font-bold mb-6 text-gray-800 border-b-2 border-red-300 pb-3 flex items-center gap-2">
+                <span className="text-red-500">➕</span> Add New Banner
+              </h3>
 
-          <div className="flex flex-col gap-5">
-            <div>
-              <label className="font-semibold text-gray-700">Image:</label>
-              <div className="border-2 border-dashed border-gray-300 h-[120px] w-[120px] flex items-center justify-center rounded-lg mt-2 hover:border-red-400 transition">
-                {!selectedImage ? (
-                  <label htmlFor="file" className="cursor-pointer">
-                    <FaPlus className="text-gray-500 text-[22px] hover:text-red-500 transition" />
+              <div className="flex flex-col gap-6">
+                <div>
+                  <label className="font-semibold text-gray-700 mb-2 block">
+                    Banner Image:
                   </label>
-                ) : (
-                  <img
-                    src={URL.createObjectURL(selectedImage)}
-                    alt=""
-                    className="h-[120px] w-[120px] object-cover rounded-lg border border-gray-200"
+                  <div className="border-2 border-dashed border-gray-300 h-[180px] w-full flex items-center justify-center rounded-xl mt-2 hover:border-red-400 transition bg-gray-50">
+                    {!selectedImage ? (
+                      <label htmlFor="file" className="cursor-pointer text-center">
+                        <FaPlus className="text-gray-400 text-[40px] hover:text-red-500 transition mx-auto mb-2" />
+                        <p className="text-gray-500 text-sm">Click to upload image</p>
+                      </label>
+                    ) : (
+                      <img
+                        src={URL.createObjectURL(selectedImage)}
+                        alt=""
+                        className="h-[170px] w-full object-cover rounded-lg border border-gray-200"
+                      />
+                    )}
+                    <input
+                      type="file"
+                      id="file"
+                      onChange={imageChange}
+                      style={{ display: "none" }}
+                    />
+                  </div>
+                  <span className="text-sm text-green-600 mt-2 block font-medium">
+                    {uploading}
+                  </span>
+                </div>
+
+                <div>
+                  <label className="font-semibold text-gray-700 mb-2 block">
+                    Title:
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter banner title"
+                    className="w-full border-2 border-gray-300 focus:border-red-400 rounded-lg outline-none px-4 py-3 transition"
+                    onChange={(e) => setTitle(e.target.value)}
                   />
-                )}
-                <input
-                  type="file"
-                  id="file"
-                  onChange={imageChange}
-                  style={{ display: "none" }}
-                />
+                </div>
+
+                <div>
+                  <label className="font-semibold text-gray-700 mb-2 block">
+                    Subtitle:
+                  </label>
+                  <input
+                    type="text"
+                    placeholder="Enter banner subtitle"
+                    className="w-full border-2 border-gray-300 focus:border-red-400 rounded-lg outline-none px-4 py-3 transition"
+                    onChange={(e) => setSubtitle(e.target.value)}
+                  />
+                </div>
+
+                <button
+                  className="bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 text-white py-3 rounded-lg font-bold transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 mt-2"
+                  onClick={handleUpload}
+                >
+                  Upload Banner
+                </button>
               </div>
-              <span className="text-sm text-green-600 mt-1 block">
-                {uploading}
-              </span>
             </div>
-
-            <div>
-              <label className="font-semibold text-gray-700">Title:</label>
-              <input
-                type="text"
-                className="w-full border-b-2 border-gray-300 focus:border-red-400 outline-none mt-1 py-1 transition"
-                onChange={(e) => setTitle(e.target.value)}
-              />
-            </div>
-
-            <div>
-              <label className="font-semibold text-gray-700">Subtitle:</label>
-              <input
-                type="text"
-                className="w-full border-b-2 border-gray-300 focus:border-red-400 outline-none mt-1 py-1 transition"
-                onChange={(e) => setSubtitle(e.target.value)}
-              />
-            </div>
-
-            <button
-              className="bg-red-500 hover:bg-red-600 text-white py-2 rounded-md font-semibold transition mt-2"
-              onClick={handleUpload}
-            >
-              Upload
-            </button>
           </div>
         </div>
       </div>

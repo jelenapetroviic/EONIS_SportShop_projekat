@@ -43,6 +43,10 @@ const ProductSchema = mongoose.Schema({
   discountedPrice: {
     type: Number
   },
+  stock: {
+    type: Number,
+    default: 0
+  },
   inStock: {
     type: Boolean,
     default: true

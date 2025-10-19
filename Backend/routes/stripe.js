@@ -47,7 +47,7 @@ router.post("/create-checkout-session", async (req, res) => {
       customer: customer.id,
       line_items,
       mode: "payment",
-      success_url: `${process.env.CLIENT_URL}/orders`,
+      success_url: `${process.env.CLIENT_URL}/orders?payment_success=true`,
       cancel_url: `${process.env.CLIENT_URL}/cart`,
     });
 
@@ -64,8 +64,8 @@ let endpointSecret = "whsec_fac97ee3988540c1b07cb0b02908a77976373ec380888d783781
 
 router.post(
   "/webhook",
-  express.raw({ type: "application/json" }),
   (req, res) => {
+    console.log("=== WEBHOOK RECEIVED ===");
     const sig = req.headers["stripe-signature"];
 
     let data;
@@ -79,10 +79,10 @@ router.post(
           sig,
           endpointSecret
         );
-        console.log("webhook verified ");
+        console.log("Webhook verified successfully");
       } catch (err) {
-        console.log("webhook error", err.message);
-        response.status(400).send(`Webhook Error: ${err.message}`);
+        console.log("Webhook verification error:", err.message);
+        res.status(400).send(`Webhook Error: ${err.message}`);
         return;
       }
 
@@ -93,11 +93,19 @@ router.post(
       eventType = req.body.type;
     }
 
+    console.log("Event Type:", eventType);
+
     // Handle the event
     if (eventType === "checkout.session.completed") {
+      console.log("Processing checkout.session.completed event");
+      console.log("Cart data:", cart);
+      console.log("User data:", { name, userId, email });
+
       stripe.customers
         .retrieve(data.customer)
         .then(async(customer) => {
+          console.log("Customer retrieved:", customer.id);
+
           const newOrder =  Order({
             name,
             userId,
@@ -105,11 +113,24 @@ router.post(
             total:cart.total,
             email
           });
-          await newOrder.save();
+
+          console.log("Creating order with data:", {
+            name,
+            userId,
+            productsCount: cart?.products?.length,
+            total: cart?.total,
+            email
+          });
+
+          const savedOrder = await newOrder.save();
+          console.log("Order saved successfully! Order ID:", savedOrder._id);
         })
         .catch((err) => {
-          console.log(err.message);
+          console.log("Error saving order:", err.message);
+          console.log("Full error:", err);
         });
+    } else {
+      console.log("Event type not handled:", eventType);
     }
 
     // Return a 200 response to acknowledge receipt of the event

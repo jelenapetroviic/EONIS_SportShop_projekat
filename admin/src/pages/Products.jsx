@@ -19,6 +19,15 @@ const Products = () => {
     getProducts();
   }, []);
 
+  const handleDelete = async (id) => {
+    try {
+      await userRequest.delete(`/products/${id}`);
+      setProducts(products.filter((product) => product._id !== id));
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const columns = [
     { field: "_id", headerName: "ID", width: 100 },
     {
@@ -38,7 +47,32 @@ const Products = () => {
     },
     { field: "desc", headerName: "Description", width: 200 },
     { field: "originalPrice", headerName: "Price ($)", width: 120 },
-    { field: "inStock", headerName: "In Stock", width: 120 },
+    {
+      field: "stock",
+      headerName: "Stock",
+      width: 100,
+      renderCell: (params) => (
+        <span className="font-semibold text-gray-700">
+          {params.row.stock || 0}
+        </span>
+      ),
+    },
+    {
+      field: "inStock",
+      headerName: "Status",
+      width: 140,
+      renderCell: (params) => (
+        <span
+          className={`px-3 py-1 rounded-full text-xs font-semibold ${
+            params.row.inStock && params.row.stock > 0
+              ? "bg-green-100 text-green-700"
+              : "bg-red-100 text-red-700"
+          }`}
+        >
+          {params.row.inStock && params.row.stock > 0 ? "In Stock" : "Out of Stock"}
+        </span>
+      ),
+    },
     {
       field: "edit",
       headerName: "Edit",
@@ -55,8 +89,11 @@ const Products = () => {
       field: "delete",
       headerName: "Delete",
       width: 120,
-      renderCell: () => (
-        <FaTrash className="text-red-500 hover:text-red-600 text-[18px] cursor-pointer transition" />
+      renderCell: (params) => (
+        <FaTrash
+          className="text-red-500 hover:text-red-600 text-[18px] cursor-pointer transition"
+          onClick={() => handleDelete(params.row._id)}
+        />
       ),
     },
   ];

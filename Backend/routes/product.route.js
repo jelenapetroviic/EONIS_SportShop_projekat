@@ -5,6 +5,8 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  decreaseStock,
+  increaseStock,
 } from "../controller/product.controller.js";
 import express from "express";
 const router = express.Router();
@@ -22,5 +24,11 @@ router.put("/:id", updateProduct);
 
 // DELETE PRODUCT
 router.delete("/:id", deleteProduct);
+
+// DECREASE STOCK
+router.post("/decrease-stock", decreaseStock);
+
+// INCREASE STOCK
+router.post("/increase-stock", increaseStock);
 
 export default router;

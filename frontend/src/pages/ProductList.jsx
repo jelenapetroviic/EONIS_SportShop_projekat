@@ -6,7 +6,7 @@ const ProductList = () => {
   const location = useLocation();
   const query = location.pathname.split("/")[2];
   const [filters, setFilters] = useState({});
-  const [sort, setSort] = useState("newest");
+  const [sort, setSort] = useState("");
 
   const handleFilters = (e) => {
     const value = e.target.value;
@@ -27,51 +27,25 @@ const ProductList = () => {
           </span>
 
           <select
-            name="concern"
+            name="category"
             className="p-3 mb-3 sm:mb-0 sm:mr-4 rounded-xl border border-gray-300 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#e84a4a] hover:border-[#e84a4a] transition-all duration-300"
             onChange={handleFilters}
           >
-            <option value="">Select Concern</option>
-            <option>Dry Skin</option>
-            <option>Pigmentation</option>
-            <option>Oil Control</option>
-            <option>Anti Acne</option>
-            <option>Sunburn</option>
-            <option>Skin Brightening</option>
-            <option>Tan Removal</option>
-            <option>Night Routine</option>
-            <option>UV Protection</option>
-            <option>Damaged Hair</option>
-            <option>Frizzy Hair</option>
-            <option>Stretch Marks</option>
-            <option>Color Protection</option>
-            <option>Dry Hair</option>
-            <option>Soothing</option>
-            <option>Dandruff</option>
-            <option>Greying</option>
-            <option>Hairfall</option>
-            <option>Hair Color</option>
-            <option>Well Being</option>
-            <option>Acne</option>
-            <option>Hair Growth</option>
+            <option value="">Category</option>
+            <option>Clothing</option>
+            <option>Footwear</option>
+            <option>Backpacks</option>
+            <option>Accessories</option>
           </select>
 
           <select
-            name="brand"
+            name="gender"
             className="p-3 rounded-xl border border-gray-300 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#e84a4a] hover:border-[#e84a4a] transition-all duration-300"
             onChange={handleFilters}
           >
-            <option value="">Select Brand</option>
-            <option>Garnier</option>
-            <option>Kylie</option>
-            <option>Kiss Beauty</option>
-            <option>Dr Rashel</option>
-            <option>Luron</option>
-            <option>Nivea</option>
-            <option>Heaven Dove</option>
-            <option>Disaar</option>
-            <option>Johnsons Baby</option>
-            <option>Rexona</option>
+            <option value="">Gender</option>
+            <option>Male</option>
+            <option>Female</option>
           </select>
         </div>
 
@@ -86,9 +60,9 @@ const ProductList = () => {
             onChange={(e) => setSort(e.target.value)}
             className="p-3 rounded-xl border border-gray-300 bg-gray-50 text-gray-700 focus:outline-none focus:ring-2 focus:ring-[#4a90e2] hover:border-[#4a90e2] transition-all duration-300"
           >
-            <option value="newest">Newest</option>
-            <option value="asc">Price (Low → High)</option>
-            <option value="desc">Price (High → Low)</option>
+            <option value="">Price</option>
+            <option value="asc">Low to High</option>
+            <option value="desc">High to Low</option>
           </select>
         </div>
       </div>

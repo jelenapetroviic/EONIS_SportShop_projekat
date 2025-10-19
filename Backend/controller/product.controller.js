@@ -78,7 +78,7 @@ const getALLproducts = asyncHandler(async (req, res) => {
     });
   } else {
     products = await Product.find().sort({ createdAt: -1 });
-   
+
   }
   res.status(200).json(products)
 });
@@ -110,4 +110,66 @@ const ratingProduct = asyncHandler(async (req, res) => {
   }
 });
 
-export {ratingProduct, getALLproducts,getProduct, createProduct,updateProduct, deleteProduct}
+// DECREASE STOCK
+const decreaseStock = asyncHandler(async (req, res) => {
+  const { productId, quantity } = req.body;
+
+  const product = await Product.findById(productId);
+
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+
+  // Check if enough stock available
+  if (product.stock < quantity) {
+    res.status(400);
+    throw new Error("Not enough stock available");
+  }
+
+  // Decrease stock
+  product.stock -= quantity;
+
+  // If stock reaches 0, set inStock to false
+  if (product.stock === 0) {
+    product.inStock = false;
+  }
+
+  await product.save();
+
+  res.status(200).json({
+    message: "Stock updated successfully",
+    stock: product.stock,
+    inStock: product.inStock,
+  });
+});
+
+// INCREASE STOCK (when removing from cart)
+const increaseStock = asyncHandler(async (req, res) => {
+  const { productId, quantity } = req.body;
+
+  const product = await Product.findById(productId);
+
+  if (!product) {
+    res.status(404);
+    throw new Error("Product not found");
+  }
+
+  // Increase stock
+  product.stock += quantity;
+
+  // If stock is now greater than 0, set inStock to true
+  if (product.stock > 0) {
+    product.inStock = true;
+  }
+
+  await product.save();
+
+  res.status(200).json({
+    message: "Stock restored successfully",
+    stock: product.stock,
+    inStock: product.inStock,
+  });
+});
+
+export {ratingProduct, getALLproducts,getProduct, createProduct,updateProduct, deleteProduct, decreaseStock, increaseStock}

@@ -67,7 +67,12 @@ const Products = ({ filters, sort, query }) => {
           to={`/product/${product._id}`}
           className="transition-transform duration-300 hover:scale-105"
         >
-          <Product img={product.img} title={product.title} />
+          <Product
+            img={product.img}
+            title={product.title}
+            originalPrice={product.originalPrice}
+            discountedPrice={product.discountedPrice}
+          />
         </Link>
       ))}
     </div>

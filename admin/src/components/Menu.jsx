@@ -14,15 +14,22 @@ import {
 import { Link } from "react-router-dom";
 
 const Menu = () => {
+  const handleExit = () => {
+    // Just redirect back to frontend without logging out
+    window.location.href = "http://localhost:5174";
+  };
+
   return (
     <div className="h-[100vh] w-[320px] bg-gradient-to-b from-gray-100 to-gray-200 shadow-2xl border-r border-gray-300 flex flex-col p-6">
       <h2 className="text-2xl font-bold mb-6 text-gray-800 tracking-wide">Dashboard Menu</h2>
 
       <ul className="flex flex-col items-start justify-start w-full space-y-3">
-        <li className="flex items-center w-full text-[18px] font-medium cursor-pointer px-5 py-3 rounded-xl transition-all duration-200 hover:scale-[1.03] hover:bg-gradient-to-r hover:from-blue-500 hover:to-teal-400 hover:text-white shadow-sm">
-          <FaHome className="mr-[15px] text-blue-500 text-xl" />
-          Home
-        </li>
+        <Link to="/" className="w-full">
+          <li className="flex items-center w-full text-[18px] font-medium cursor-pointer px-5 py-3 rounded-xl transition-all duration-200 hover:scale-[1.03] hover:bg-gradient-to-r hover:from-blue-500 hover:to-teal-400 hover:text-white shadow-sm">
+            <FaHome className="mr-[15px] text-blue-500 text-xl" />
+            Home
+          </li>
+        </Link>
 
         <li className="flex items-center w-full text-[18px] font-medium cursor-pointer px-5 py-3 rounded-xl transition-all duration-200 hover:scale-[1.03] hover:bg-gradient-to-r hover:from-blue-500 hover:to-teal-400 hover:text-white shadow-sm">
           <FaUser className="mr-[15px] text-blue-500 text-xl" />
@@ -83,9 +90,12 @@ const Menu = () => {
           All logs
         </li>
 
-        <li className="flex items-center w-full text-[18px] font-medium cursor-pointer px-5 py-3 rounded-xl transition-all duration-200 hover:scale-[1.03] hover:bg-gradient-to-r hover:from-red-500 hover:to-pink-500 hover:text-white shadow-sm">
+        <li
+          onClick={handleExit}
+          className="flex items-center w-full text-[18px] font-medium cursor-pointer px-5 py-3 rounded-xl transition-all duration-200 hover:scale-[1.03] hover:bg-gradient-to-r hover:from-red-500 hover:to-pink-500 hover:text-white shadow-sm"
+        >
           <FaSignOutAlt className="mr-[15px] text-red-500 text-xl" />
-          Logout
+          Exit
         </li>
       </ul>
     </div>

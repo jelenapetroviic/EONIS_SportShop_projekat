@@ -1,4 +1,5 @@
 import { FaSearch, FaUser } from "react-icons/fa";
+import { MdDashboard } from "react-icons/md";
 import { Link } from "react-router-dom";
 import ShoppingBasketIcon from "@mui/icons-material/ShoppingBasket";
 import Badge from "@mui/material/Badge";
@@ -6,9 +7,16 @@ import { useSelector } from "react-redux";
 import { useState } from "react";
 
 const Navbar = () => {
-  const quantity = useSelector((state) => state.cart.quantity);
+  const cart = useSelector((state) => state.cart);
   const [search, setSearch] = useState("");
   const user = useSelector((state) => state.user);
+
+  // Show "1" if cart has any products, otherwise show nothing
+  const cartBadgeCount = cart.products.length > 0 ? 1 : 0;
+
+  const handleAdminDashboard = () => {
+    window.location.href = "http://localhost:5173";
+  };
 
   return (
     <nav className="flex items-center justify-between h-[80px] bg-white shadow-md px-10 sticky top-0 z-50 border-b border-gray-200">
@@ -47,7 +55,7 @@ const Navbar = () => {
           className="relative group hover:scale-110 transition-transform duration-300"
         >
           <Badge
-            badgeContent={quantity}
+            badgeContent={cartBadgeCount}
             color="secondary"
             overlap="circular"
             sx={{
@@ -61,6 +69,17 @@ const Navbar = () => {
             <ShoppingBasketIcon className="text-gray-700 text-[28px] group-hover:text-red-600 transition-all duration-300" />
           </Badge>
         </Link>
+
+        {/* ADMIN DASHBOARD - Only visible for admin users */}
+        {user.currentUser?.role === "admin" && (
+          <div
+            onClick={handleAdminDashboard}
+            className="relative group cursor-pointer hover:scale-110 transition-transform duration-300"
+            title="Admin Dashboard"
+          >
+            <MdDashboard className="text-gray-700 text-[32px] group-hover:text-red-600 transition-all duration-300" />
+          </div>
+        )}
 
         {/* USER */}
         <Link
