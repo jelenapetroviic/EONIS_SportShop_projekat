@@ -2,14 +2,14 @@ import { FaPlus, FaTrash } from "react-icons/fa";
 import axios from "axios";
 import { userRequest } from "../requestMethods";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const NewProduct = () => {
+  const navigate = useNavigate();
   const [selectedImage, setSelectedImage] = useState(null);
   const [inputs, setInputs] = useState({});
   const [uploading, setUploading] = useState("Uploading is 0%");
   const [selectedOptions, setSelectedOptions] = useState({
-    concern: [],
-    skintype: [],
     categories: [],
   });
 
@@ -48,16 +48,19 @@ const NewProduct = () => {
 
     setUploading("Uploading ...")
     try {
-      
+
       const uploadRes = await axios.post(
         "https://api.cloudinary.com/v1_1/datjymz90/image/upload",
         data,
       );
 
       const {url} = uploadRes.data;
-      
+
       setUploading("Uploaded 100%")
       await userRequest.post("/products", {img: url, ...inputs, ...selectedOptions})
+
+      // Navigate to products page after successful creation
+      navigate("/products");
     } catch (error) {
       console.log(error);
       setUploading("Uploading failed")
@@ -166,110 +169,19 @@ const NewProduct = () => {
 
           {/* RIGHT SIDE */}
           <div className="flex-1 space-y-6">
-            <div className="grid grid-cols-2 gap-5">
-              <div>
-                <label className="block font-semibold mb-1 text-gray-700">
-                  Wholesale Price
-                </label>
-                <input
-                  type="number"
-                  name="wholesalePrice"
-                  onChange={handleChange}
-                  placeholder="$70"
-                  className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-gray-400"
-                />
-              </div>
-
-              <div>
-                <label className="block font-semibold mb-1 text-gray-700">
-                  Min Quantity
-                </label>
-                <input
-                  type="number"
-                  name="wholesaleMinimumQuantity"
-                  onChange={handleChange}
-                  placeholder="10"
-                  className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-gray-400"
-                />
-              </div>
-            </div>
-
             <div>
               <label className="block font-semibold mb-1 text-gray-700">
-                Brand
+                Stock Quantity
               </label>
               <input
-                type="text"
-                name="brand"
+                type="number"
+                name="stock"
                 onChange={handleChange}
-                placeholder="Brand name"
+                placeholder="Available quantity"
                 className="w-full border border-gray-300 rounded-lg p-2 focus:ring-2 focus:ring-gray-400"
               />
             </div>
 
-            {/* Concern */}
-            <div>
-              <label className="block font-semibold mb-2 text-gray-700">
-                Concern
-              </label>
-              <select
-                name="concern"
-                onChange={handleSelectChange}
-                className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-gray-400"
-              >
-                <option>Select Concern</option>
-                <option>Dry Skin</option>
-                <option>Pigmentation</option>
-                <option>Oil Control</option>
-                <option>Anti Acne</option>
-                <option>Tan Removal</option>
-              </select>
-
-              {selectedOptions.concern.map((option) => (
-                <div
-                  key={option}
-                  className="flex items-center mt-1 space-x-2 text-sm"
-                >
-                  <span>{option}</span>
-                  <FaTrash
-                    className="cursor-pointer text-red-500"
-                    onClick={() => handleRemoveOption("concern", option)}
-                  />
-                </div>
-              ))}
-            </div>
-
-            {/* Skin Type */}
-            <div>
-              <label className="block font-semibold mb-2 text-gray-700">
-                Skin Type
-              </label>
-              <select
-                name="skintype"
-                onChange={handleSelectChange}
-                className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-gray-400"
-              >
-                <option>Select Skin Type</option>
-                <option>All</option>
-                <option>Oily</option>
-                <option>Dry</option>
-                <option>Sensitive</option>
-                <option>Normal</option>
-              </select>
-
-              {selectedOptions.skintype.map((option) => (
-                <div
-                  key={option}
-                  className="flex items-center mt-1 space-x-2 text-sm"
-                >
-                  <span>{option}</span>
-                  <FaTrash
-                    className="cursor-pointer text-red-500"
-                    onClick={() => handleRemoveOption("skintype", option)}
-                  />
-                </div>
-              ))}
-            </div>
 
             {/* Category */}
             <div>
@@ -282,10 +194,10 @@ const NewProduct = () => {
                 className="border border-gray-300 rounded-lg p-2 w-full focus:ring-2 focus:ring-gray-400"
               >
                 <option>Select Category</option>
-                <option>Serums</option>
-                <option>Toners</option>
-                <option>Foundations</option>
-                <option>Lotions</option>
+                <option>Clothing</option>
+                <option>Footwear</option>
+                <option>Backpacks</option>
+                <option>Accessories</option>
               </select>
 
               {selectedOptions.categories.map((option) => (

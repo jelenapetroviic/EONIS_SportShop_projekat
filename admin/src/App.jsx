@@ -11,11 +11,11 @@ import Product from "./pages/Product";
 function App() {
   const Layout = () => {
     return (
-      <div className="flex">
-        <div>
+      <div className="flex min-h-screen">
+        <div className="flex-shrink-0">
           <Menu />
         </div>
-        <div>
+        <div className="flex-1 overflow-auto">
           <Outlet />
         </div>
       </div>

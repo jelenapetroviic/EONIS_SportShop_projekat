@@ -11,9 +11,23 @@ import Register from "./pages/Register";
 import ProductList from "./pages/ProductList";
 import Order from "./pages/Order";
 import { useSelector } from "react-redux";
+import { useEffect } from "react";
 
 function App() {
   const user = useSelector((state) => state.user);
+
+  // Check for logout parameter from admin dashboard
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("logout") === "true") {
+      // Clear localStorage
+      localStorage.clear();
+      // Remove the query parameter and reload
+      window.history.replaceState({}, document.title, "/");
+      window.location.reload();
+    }
+  }, []);
+
   const Layout = () => {
     return (
       <div>

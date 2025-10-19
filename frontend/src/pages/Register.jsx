@@ -13,6 +13,25 @@ const Register = () => {
   const handleRegister = async (e) => {
     e.preventDefault();
 
+    // Validate all fields are filled
+    if (!name || !email || !password) {
+      toast.error("Please fill in all fields");
+      return;
+    }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      toast.error("Please enter a valid email address (e.g., example@domain.com)");
+      return;
+    }
+
+    // Validate password length
+    if (password.length < 6) {
+      toast.error("Password must be at least 6 characters long");
+      return;
+    }
+
     try {
       await userRequest.post("/auth/register", { name, email, password });
       toast.success("Account created successfully!");
@@ -47,8 +66,9 @@ const Register = () => {
               type="text"
               id="name"
               className="w-full px-5 py-3 border border-[#f3d1d1] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#e84a4a] transition text-gray-900 placeholder-gray-400"
-              placeholder="John Doe"
+              placeholder="Enter your name"
               onChange={(e) => setName(e.target.value)}
+              required
             />
           </div>
 
@@ -63,8 +83,9 @@ const Register = () => {
               type="email"
               id="email"
               className="w-full px-5 py-3 border border-[#f3d1d1] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#e84a4a] transition text-gray-900 placeholder-gray-400"
-              placeholder="example@example.com"
+              placeholder="Enter your email"
               onChange={(e) => setEmail(e.target.value)}
+              required
             />
           </div>
 
@@ -79,8 +100,10 @@ const Register = () => {
               type="password"
               id="password"
               className="w-full px-5 py-3 border border-[#f3d1d1] rounded-xl focus:outline-none focus:ring-2 focus:ring-[#e84a4a] transition text-gray-900 placeholder-gray-400"
-              placeholder="********"
+              placeholder="Enter your password"
               onChange={(e) => setPassword(e.target.value)}
+              required
+              minLength={6}
             />
           </div>
 

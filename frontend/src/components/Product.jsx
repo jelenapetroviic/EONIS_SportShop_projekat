@@ -1,6 +1,11 @@
 import ReactStars from "react-stars";
+import PropTypes from "prop-types";
 
-const Product = ({ img, title }) => {
+const Product = ({ img, title, originalPrice, discountedPrice }) => {
+  // Show discounted price if available, otherwise show original price
+  const displayPrice = discountedPrice || originalPrice;
+  const hasDiscount = discountedPrice && discountedPrice < originalPrice;
+
   return (
     <div className="group flex flex-col items-center justify-between h-[480px] w-[320px] m-[12px] bg-white rounded-2xl shadow-md hover:shadow-xl transition-all duration-500 cursor-pointer overflow-hidden border border-gray-100 hover:border-red-600/40">
       {/* Slika proizvoda */}
@@ -21,7 +26,14 @@ const Product = ({ img, title }) => {
           {title}
         </h2>
 
-        <span className="text-[20px] font-bold text-red-600 mt-1">$100</span>
+        <div className="flex items-center gap-2 mt-1">
+          <span className="text-[20px] font-bold text-red-600">${displayPrice}</span>
+          {hasDiscount && (
+            <span className="text-[16px] text-gray-400 line-through">
+              ${originalPrice}
+            </span>
+          )}
+        </div>
 
         <div className="flex items-center justify-center mt-2">
           <ReactStars
@@ -31,7 +43,6 @@ const Product = ({ img, title }) => {
             color2={"#FFD700"}
             edit={false}
           />
-          <span className="ml-2 text-[15px] text-gray-500">(24)</span>
         </div>
 
         {/* Dugme “View Details” pri hoveru */}
@@ -41,6 +52,13 @@ const Product = ({ img, title }) => {
       </div>
     </div>
   );
+};
+
+Product.propTypes = {
+  img: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+  originalPrice: PropTypes.number.isRequired,
+  discountedPrice: PropTypes.number,
 };
 
 export default Product;
