@@ -90,6 +90,13 @@ const Orders = () => {
           columns={columns}
           getRowId={(row) => row._id}
           checkboxSelection
+          pagination
+          pageSizeOptions={[10]}
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 10, page: 0 },
+            },
+          }}
           sx={{
             border: "none",
             "& .MuiDataGrid-columnHeaders": {
