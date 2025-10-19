@@ -51,6 +51,13 @@ const Users = () => {
           columns={columns}
           checkboxSelection
           autoHeight
+          pagination
+          pageSizeOptions={[10]}
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 10, page: 0 },
+            },
+          }}
           sx={{
             "& .MuiDataGrid-columnHeaders": {
               backgroundColor: "#fef2f2", // svetlocrvena pozadina headera
