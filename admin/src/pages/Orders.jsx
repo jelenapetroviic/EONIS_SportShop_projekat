@@ -1,5 +1,4 @@
 import { DataGrid } from "@mui/x-data-grid";
-import { Link } from "react-router-dom";
 import { FaCheckCircle, FaCheckDouble, FaClock } from "react-icons/fa";
 import { useState, useEffect } from "react";
 import { userRequest } from "../requestMethods";
@@ -77,11 +76,6 @@ const Orders = () => {
         <h1 className="text-[24px] font-semibold text-red-600">
           All Orders
         </h1>
-        <Link to="/neworder">
-          <button className="bg-red-500 hover:bg-red-600 transition-all text-white px-5 py-2 rounded-lg font-semibold shadow-md">
-            Create
-          </button>
-        </Link>
       </div>
 
       <div className="h-[70vh]">
